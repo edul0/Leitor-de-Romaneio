@@ -28,4 +28,5 @@ jobs:
       - name: Build and Publish Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VITE_API_KEYS: ${{ secrets.VITE_API_KEYS }}
         run: npm run electron:build -- --publish always
