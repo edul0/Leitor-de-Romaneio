@@ -1,7 +1,7 @@
 {
   "name": "romaneio-reader",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "main.cjs",
   "scripts": {
@@ -21,6 +21,10 @@
     "win": {
       "target": "nsis",
       "icon": "public/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     },
     "publish": [
       {
