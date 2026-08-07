@@ -13,8 +13,8 @@ export function App() {
   const [selectedRecord, setSelectedRecord] = useState<RomaneioRecord | null>(null);
   
   // Array de chaves (revezamento)
-  const envKeys = import.meta.env.VITE_API_KEYS;
-  const apiKeys = envKeys ? envKeys.split(',') : [];
+  const envKeys = import.meta.env.VITE_API_KEYS || '';
+  const apiKeys = envKeys.split(/[\n,]+/).map(k => k.trim()).filter(Boolean);
 
   const fileToDataUrl = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
