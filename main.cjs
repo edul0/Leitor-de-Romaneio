@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const url = require('url');
 
@@ -36,7 +37,39 @@ function createWindow() {
   });
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow();
+
+  // Check for updates on startup
+  autoUpdater.checkForUpdatesAndNotify();
+});
+
+// Auto Updater Events
+autoUpdater.on('update-available', (info) => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Atualização Encontrada',
+    message: `Uma nova versão (${info.version}) está disponível. O download começará em segundo plano.`
+  });
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+  dialog.showMessageBox({
+    type: 'question',
+    buttons: ['Reiniciar Agora', 'Depois'],
+    defaultId: 0,
+    title: 'Atualização Pronta',
+    message: 'A nova versão foi baixada. Deseja reiniciar o aplicativo para instalar agora?'
+  }).then((result) => {
+    if (result.response === 0) {
+      autoUpdater.quitAndInstall();
+    }
+  });
+});
+
+autoUpdater.on('error', (err) => {
+  console.error('Erro na atualização automática:', err);
+});
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
