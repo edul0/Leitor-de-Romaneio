@@ -160,25 +160,7 @@ export async function exportToExcel(
 
   const lastDataRow = rowIdx - 1;
 
-  // ---- Rodapé de totais (replica exatamente as fórmulas do modelo) ----
-  const sumRow = rowIdx; // linha logo após a última linha de dados
-  sheet.getCell(`E${sumRow}`).value = { formula: `SUM(E${firstDataRow}:E${lastDataRow})` };
-  sheet.getCell(`E${sumRow}`).font = BOLD_VALUE_FONT;
-  sheet.getCell(`F${sumRow}`).font = BOLD_VALUE_FONT;
-  sheet.getCell(`F${sumRow}`).numFmt = CURRENCY_FMT;
-  sheet.getCell(`G${sumRow}`).value = { formula: `SUM(G${firstDataRow}:G${lastDataRow})` };
-  sheet.getCell(`G${sumRow}`).font = BOLD_VALUE_FONT;
-  sheet.getCell(`G${sumRow}`).numFmt = CURRENCY_FMT;
-
-  const convRow = sumRow + 1; // conversão sc -> kg e preço médio, igual ao modelo
-  sheet.getCell(`E${convRow}`).value = { formula: `E${sumRow}*25` };
-  sheet.getCell(`E${convRow}`).font = VALUE_FONT;
-  sheet.getCell(`F${convRow}`).value = { formula: `G${convRow}/E${convRow}` };
-  sheet.getCell(`F${convRow}`).font = VALUE_FONT;
-  sheet.getCell(`F${convRow}`).numFmt = CURRENCY_FMT;
-  sheet.getCell(`G${convRow}`).value = { formula: `G${sumRow}` };
-  sheet.getCell(`G${convRow}`).font = VALUE_FONT;
-  sheet.getCell(`G${convRow}`).numFmt = CURRENCY_FMT;
+  // ---- Rodapé de totais foi removido a pedido do usuário ----
 
   // ---- Gera o arquivo e dispara o download ----
   const buffer = await workbook.xlsx.writeBuffer();
