@@ -6,7 +6,6 @@ const CURRENCY_FMT =
 
 const LABEL_FONT = { name: "Calibri", size: 12, bold: true };
 const VALUE_FONT = { name: "Calibri", size: 12, bold: false };
-const BOLD_VALUE_FONT = { name: "Calibri", size: 12, bold: true };
 const HEADER_FONT = { name: "Aptos Narrow", size: 12, bold: true };
 
 const MED = "medium";
@@ -105,7 +104,6 @@ export async function exportToExcel(
 
   // ---- Linhas de dados (a partir da linha 7), agrupadas por romaneio ----
   let rowIdx = 7;
-  const firstDataRow = rowIdx;
 
   const ordered = records
     .filter((r) => r.status === "success")
@@ -157,8 +155,6 @@ export async function exportToExcel(
       botCell.border = { ...botCell.border, bottom: { style: MED as ExcelJS.BorderStyle } };
     });
   }
-
-  const lastDataRow = rowIdx - 1;
 
   // ---- Rodapé de totais foi removido a pedido do usuário ----
 
