@@ -31,7 +31,7 @@ let discoverPromise: Promise<string[]> | null = null;
 
 async function discoverBestModels(apiKey: string): Promise<string[]> {
   if (apiKey.startsWith('sk-or-')) {
-    return ['google/gemini-1.5-flash'];
+    return ['openrouter/free'];
   }
   if (discoveredModels) return discoveredModels;
   if (discoverPromise) return discoverPromise;
