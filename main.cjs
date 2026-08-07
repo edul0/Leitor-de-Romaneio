@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const url = require('url');
@@ -46,29 +46,32 @@ app.on('ready', () => {
 
 // Auto Updater Events
 autoUpdater.on('update-available', (info) => {
-  dialog.showMessageBox({
-    type: 'info',
-    title: 'Atualização Encontrada',
-    message: `Uma nova versão (${info.version}) está disponível. O download começará em segundo plano.`
-  });
+  if (mainWindow) {
+    mainWindow.webContents.send('updater-event', { type: 'available', version: info.version });
+  }
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+  if (mainWindow) {
+    mainWindow.webContents.send('updater-event', { type: 'progress', percent: progressObj.percent });
+  }
 });
 
 autoUpdater.on('update-downloaded', (info) => {
-  dialog.showMessageBox({
-    type: 'question',
-    buttons: ['Reiniciar Agora', 'Depois'],
-    defaultId: 0,
-    title: 'Atualização Pronta',
-    message: 'A nova versão foi baixada. Deseja reiniciar o aplicativo para instalar agora?'
-  }).then((result) => {
-    if (result.response === 0) {
-      autoUpdater.quitAndInstall();
-    }
-  });
+  if (mainWindow) {
+    mainWindow.webContents.send('updater-event', { type: 'downloaded' });
+  }
 });
 
 autoUpdater.on('error', (err) => {
   console.error('Erro na atualização automática:', err);
+  if (mainWindow) {
+    mainWindow.webContents.send('updater-event', { type: 'error', error: err.message });
+  }
+});
+
+ipcMain.on('updater-install', () => {
+  autoUpdater.quitAndInstall();
 });
 
 app.on('window-all-closed', function () {

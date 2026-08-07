@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { UploadArea } from './components/UploadArea';
 import { DataTable } from './components/DataTable';
 import { RomaneioDetailModal } from './components/RomaneioDetailModal';
+import { UpdaterUI } from './components/UpdaterUI';
 import type { RomaneioRecord } from './types/romaneio';
 import { processRomaneioImage } from './services/geminiOcrService';
 import { Upload } from 'lucide-react';
@@ -138,6 +139,7 @@ export function App() {
 
   return (
     <>
+      <UpdaterUI />
       <div className="flex flex-col font-sans relative z-10 animate-fadeIn min-h-screen text-slate-800">
         <Header
           records={records}
