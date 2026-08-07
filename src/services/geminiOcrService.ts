@@ -30,6 +30,9 @@ let discoveredModels: string[] | null = null;
 let discoverPromise: Promise<string[]> | null = null;
 
 async function discoverBestModels(apiKey: string): Promise<string[]> {
+  if (apiKey.startsWith('sk-or-')) {
+    return ['google/gemini-1.5-flash'];
+  }
   if (discoveredModels) return discoveredModels;
   if (discoverPromise) return discoverPromise;
 
@@ -149,9 +152,35 @@ Formato do JSON exigido:
         const attempt = retries + rateLimitRetries + 1;
         console.log(`Tentando modelo: ${modelName} (Tentativa ${attempt})`);
 
-        const response = await fetchWithTimeout(
-          `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${cleanKey}`,
-          {
+        const isOpenRouter = cleanKey.startsWith('sk-or-');
+        let fetchUrl = '';
+        let fetchOptions: RequestInit = {};
+
+        if (isOpenRouter) {
+          fetchUrl = 'https://openrouter.ai/api/v1/chat/completions';
+          fetchOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${cleanKey}`,
+            },
+            body: JSON.stringify({
+              model: modelName,
+              messages: [
+                {
+                  role: 'user',
+                  content: [
+                    { type: 'text', text: promptText },
+                    { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64Data}` } }
+                  ]
+                }
+              ],
+              temperature: 0.0
+            })
+          };
+        } else {
+          fetchUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${cleanKey}`;
+          fetchOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -163,9 +192,10 @@ Formato do JSON exigido:
               }],
               generationConfig: { temperature: 0.0, responseMimeType: 'application/json' },
             }),
-          },
-          300000 // 5 minutes timeout para dar tempo dos modelos "thinking" (ex: 3.5-flash e 3.6-flash) processarem
-        );
+          };
+        }
+
+        const response = await fetchWithTimeout(fetchUrl, fetchOptions, 300000);
 
         if (!response.ok) {
           if (response.status === 429) {
@@ -180,7 +210,7 @@ Formato do JSON exigido:
           }
 
           const err = await response.json().catch(() => ({}));
-          const apiMsg = err?.error?.message || `Erro HTTP ${response.status}`;
+          const apiMsg = err?.error?.message || err?.message || `Erro HTTP ${response.status}`;
           
           if (apiMsg.includes('API_KEY_INVALID') || apiMsg.includes('API key not valid')) {
             throw new Error('Chave de API inválida. Verifique sua chave no Google AI Studio.');
@@ -196,7 +226,12 @@ Formato do JSON exigido:
         }
 
         const result = await response.json();
-        const raw = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        let raw = '';
+        if (isOpenRouter) {
+          raw = result.choices?.[0]?.message?.content;
+        } else {
+          raw = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        }
         if (!raw) throw new Error('A API retornou uma resposta vazia.');
 
         const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
