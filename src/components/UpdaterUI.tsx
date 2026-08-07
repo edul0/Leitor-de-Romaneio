@@ -57,7 +57,7 @@ export const UpdaterUI: React.FC = () => {
         {/* Header */}
         <div className="bg-slate-50 px-4 py-3 border-b border-slate-100 flex items-center gap-2">
           <DownloadCloud className="w-5 h-5 text-rose-500" />
-          <h3 className="font-bold text-slate-800 text-sm">AtualizaÁ„o do Sistema</h3>
+          <h3 className="font-bold text-slate-800 text-sm">Atualiza√ß√£o do Sistema</h3>
         </div>
 
         {/* Content */}
@@ -66,7 +66,7 @@ export const UpdaterUI: React.FC = () => {
           {status === 'available' && (
             <div>
               <p className="text-xs text-slate-600 font-medium">
-                Oba! A vers„o <span className="font-bold text-rose-600">v{version}</span> est· disponÌvel.
+                Oba! A vers√£o <span className="font-bold text-rose-600">v{version}</span> est√° dispon√≠vel.
               </p>
               <p className="text-[10px] text-slate-400 mt-1">
                 Preparando para baixar...
@@ -83,7 +83,7 @@ export const UpdaterUI: React.FC = () => {
               <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-rose-500 rounded-full transition-all duration-300 ease-out"
-                  style={{ width: ${progress}% }}
+                  style={{ width: `${progress}%` }}
                 />
               </div>
             </div>
@@ -94,7 +94,7 @@ export const UpdaterUI: React.FC = () => {
               <div className="flex items-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
                 <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                  Tudo pronto! A nova vers„o j· foi baixada e est· pronta para ser instalada.
+                  Tudo pronto! A nova vers√£o j√° foi baixada e est√° pronta para ser instalada.
                 </p>
               </div>
               <button
@@ -110,7 +110,7 @@ export const UpdaterUI: React.FC = () => {
             <div className="flex items-start gap-2 bg-rose-50 p-2.5 rounded-lg border border-rose-100">
               <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
               <div className="flex flex-col">
-                <span className="text-xs font-bold text-rose-700">Erro na atualizaÁ„o</span>
+                <span className="text-xs font-bold text-rose-700">Erro na atualiza√ß√£o</span>
                 <span className="text-[10px] text-rose-600/80 line-clamp-2">{errorMsg}</span>
               </div>
             </div>
