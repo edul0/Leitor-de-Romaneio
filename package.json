@@ -1,7 +1,7 @@
 {
   "name": "romaneio-reader",
   "private": true,
-  "version": "1.1.1",
+  "version": "1.1.2",
   "type": "module",
   "main": "main.cjs",
   "scripts": {
@@ -30,7 +30,8 @@
       {
         "provider": "github",
         "owner": "edul0",
-        "repo": "Leitor-de-Romaneio"
+        "repo": "Leitor-de-Romaneio",
+        "releaseType": "release"
       }
     ],
     "files": [
