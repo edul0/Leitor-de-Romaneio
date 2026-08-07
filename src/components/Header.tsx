@@ -37,7 +37,10 @@ export const Header: React.FC<HeaderProps> = ({
           <img src={logo} alt="Romaneio Reader Logo" className="w-11 h-11 rounded-lg object-cover shadow-sm border border-slate-200" />
           <div>
             <h1 className="text-xl font-display font-bold text-slate-800 tracking-tight">Romaneio Reader</h1>
-            <p className="text-[11px] text-slate-500 font-medium uppercase tracking-wider">Extração Inteligente</p>
+            <div className="flex items-center gap-2 mt-0.5">
+              <p className="text-[11px] text-slate-500 font-medium uppercase tracking-wider">Extração Inteligente</p>
+              <span className="px-1.5 py-0.5 bg-rose-100 text-rose-600 rounded text-[9px] font-bold">v1.0.1</span>
+            </div>
           </div>
         </div>
 
