@@ -14,7 +14,7 @@ export function App() {
   
   // Array de chaves (revezamento)
   const envKeys = import.meta.env.VITE_API_KEYS || '';
-  const apiKeys = envKeys.split(/[\n,]+/).map(k => k.trim()).filter(Boolean);
+  const apiKeys = envKeys.split(/[\n,]+/).map((k: string) => k.trim()).filter(Boolean);
 
   const fileToDataUrl = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
