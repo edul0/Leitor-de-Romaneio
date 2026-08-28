@@ -115,10 +115,10 @@ export async function processRomaneioImage(
 Sua missão é extrair os dados com 100% de precisão matemática e visual. Caligrafias podem ser confusas, então você DEVE raciocinar passo a passo antes de dar a resposta final.
 
 Regras Críticas:
-1. NÚMEROS MASCARADOS: O número "1" frequentemente é escrito como um traço diagonal longo. Cuidado para não confundir 1200 com 200, ou 1333 com 333. O número 5 e 2 podem se parecer (ex: "50k" x "20k").
-2. NUNCA INVENTE: Transcreva EXATAMENTE as letras que vê. Não adicione "50K" ou "20K" ou "MIUTO" se não estiver escrito.
-3. PROVA MATEMÁTICA: Para cada linha, você deve multiplicar "Quantidade" por "Valor Unitário". O resultado TEM QUE SER IGUAL ao "Valor Total". Se a conta não fechar perfeitamente, você leu algum número errado na caligrafia. Volte, observe a imagem novamente e corrija a leitura antes de preencher o JSON.
-4. DOCUMENTO CANCELADO: Se houver "CANCELADO", "CANCELADA", ou "NULO" escrito grande na página, defina "status_documento": "CANCELADO" e preencha "itens" como lista vazia.
+1. NÚMEROS MASCARADOS: O número "1" frequentemente é escrito como um traço diagonal longo OU com um laço curvo no topo, parecendo um "2" ou "9". O número 5 e 2 podem se parecer. Cuidado com o ponto de milhar (ex: "1.100" não é "908"). Leia cada dígito com extrema atenção!
+2. NUNCA INVENTE: Transcreva EXATAMENTE os números que vê.
+3. PROVA MATEMÁTICA: Multiplique "Quantidade" por "Valor Unitário". O resultado DEVE SER IGUAL ao "Valor Total". Se a conta não bater, você leu errado, volte e corrija! ATENÇÃO: Se a coluna TOTAL estiver em branco, a prova matemática será impossível; nesse caso redobre sua atenção visual na Quantidade.
+4. DOCUMENTO CANCELADO: Se houver "CANCELADO" escrito, defina "status_documento": "CANCELADO" e preencha "itens" como lista vazia.
 
 Responda SOMENTE com um JSON válido, sem nenhum texto Markdown fora dele.
 Formato do JSON exigido:
