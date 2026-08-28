@@ -124,7 +124,7 @@ Responda SOMENTE com um JSON válido, sem nenhum texto Markdown fora dele.
 Formato do JSON exigido:
 {
   "status_documento": "NORMAL ou CANCELADO",
-  "romaneio_numero": "número em vermelho ao lado de N°",
+  "romaneio_numero": "número do romaneio (pode ser o número em vermelho, ou o número impresso no topo após 'Nº' ex: Nº 482)",
   "data": "data formatada OBRIGATORIAMENTE no padrão DD/MM/YY (ex: 16/07/26)",
   "pagamento": "forma de pagamento se estiver escrita (ex: Dinheiro, Pix, Cheque, Prazo). Se não houver, deixe vazio",
   "itens": [
