@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
             <h1 className="text-xl font-display font-bold text-slate-800 tracking-tight">Romaneio Reader</h1>
             <div className="flex items-center gap-2 mt-0.5">
               <p className="text-[11px] text-slate-500 font-medium uppercase tracking-wider">Extração Inteligente</p>
-              <span className="px-1.5 py-0.5 bg-rose-100 text-rose-600 rounded text-[9px] font-bold">v1.1.9</span>
+              <span className="px-1.5 py-0.5 bg-rose-100 text-rose-600 rounded text-[9px] font-bold">v1.2.0</span>
             </div>
           </div>
         </div>

@@ -111,29 +111,61 @@ export async function processRomaneioImage(
   const cleanKey = apiKey.trim();
   const { mimeType, base64Data } = parseDataUrl(imageSrc);
 
-  const promptText = `Você é um especialista em leitura de romaneios manuscritos do Brasil.
-Sua missão é extrair os dados com 100% de precisão matemática e visual. Caligrafias podem ser confusas, então você DEVE raciocinar passo a passo antes de dar a resposta final.
+  const promptText = `Você é um especialista em leitura de romaneios manuscritos do Brasil, especialmente da escrita cursiva brasileira.
+Sua missão é extrair os dados com 100% de precisão. Você DEVE analisar cada número e cada letra com cuidado extremo, seguindo as regras abaixo.
 
-Regras Críticas:
-1. NÚMEROS MASCARADOS: O número "1" frequentemente é escrito como um traço diagonal longo OU com um laço curvo no topo, parecendo um "2" ou "9". O número 5 e 2 podem se parecer. Cuidado com o ponto de milhar (ex: "1.100" não é "908"). Leia cada dígito com extrema atenção!
-2. NUNCA INVENTE: Transcreva EXATAMENTE os números que vê.
-3. PROVA MATEMÁTICA: Multiplique "Quantidade" por "Valor Unitário". O resultado DEVE SER IGUAL ao "Valor Total". Se a conta não bater, você leu errado, volte e corrija! ATENÇÃO: Se a coluna TOTAL estiver em branco, a prova matemática será impossível; nesse caso redobre sua atenção visual na Quantidade.
-4. DOCUMENTO CANCELADO: Se houver "CANCELADO" escrito, defina "status_documento": "CANCELADO" e preencha "itens" como lista vazia.
+=== REGRAS CRÍTICAS DE LEITURA DE CALIGRAFIA BRASILEIRA ===
+
+REGRA 1 — O NÚMERO "1" CURSIVO (ERRO MAIS COMUM):
+Na escrita cursiva brasileira, o "1" é quase sempre escrito com um laço/gancho curvo no início, parecendo um "2", "9" ou "J". 
+EXEMPLOS COMUNS DE CONFUSÃO:
+  - "1.100" pode parecer "9100", "2100" ou "908" — MAS É 1.100
+  - "1.302" pode parecer "2302" ou "9302" — MAS É 1.302
+  - "109" pode parecer "J09" ou "709" — MAS É 109
+  - "155" pode parecer "255" ou "955" — MAS É 155
+DICA: Sempre que ver um número que começa com um símbolo parecido com "2", "9" ou "J" antes de outro dígito, considere que pode ser "1".
+Confirme se faz sentido no contexto (quantidade de sacas de batata geralmente entre 1 e 2000).
+
+REGRA 2 — PONTOS DE MILHAR:
+O ponto "." entre dígitos separa milhar do centena. Exemplos: 1.100 = mil e cem, 1.302 = mil e trezentos e dois.
+Nunca interprete o ponto como vírgula decimal em quantidades.
+
+REGRA 3 — PROVA MATEMÁTICA (quando houver total):
+Multiplique Quantidade × Valor Unitário. Se bater com o Total escrito, você leu certo.
+Se NÃO bater, você leu errado — revise a quantidade com atenção especial ao primeiro dígito.
+Se a coluna Total estiver em branco, pule a prova e foque na leitura visual atenta.
+
+REGRA 4 — LINHAS VAZIAS:
+Muitos romaneios têm linhas pré-impressas (Batata Ágata, Batata Asterix, Batata Cupido, etc.) que ficam em branco quando não foram preenchidas.
+NUNCA inclua no JSON uma linha que não tenha quantidade escrita. Ignore linhas completamente em branco.
+
+REGRA 5 — MERCADORIAS:
+Transcreva o nome EXATAMENTE como impresso/escrito. Não invente abreviações.
+Exemplos: "Batata Miúda P.40", "Batata Miúda P.45", "Batata Ágata Lavada", "Diversa", "Florão", "Pirulito".
+
+REGRA 6 — DOCUMENTO CANCELADO:
+Se houver "CANCELADO" escrito na página, defina "status_documento": "CANCELADO" e itens como lista vazia.
+
+=== PROCESSO OBRIGATÓRIO ===
+Para CADA linha com quantidade, você deve no campo "raciocinio":
+1. Descrever o que vê pixel a pixel no primeiro dígito (ex: "Vejo um símbolo com gancho curvo que parece 9 mas na escrita brasileira é provavelmente 1")
+2. Raciocinar sobre qual número faz sentido no contexto
+3. Fazer a prova matemática se o total estiver visível
 
 Responda SOMENTE com um JSON válido, sem nenhum texto Markdown fora dele.
 Formato do JSON exigido:
 {
   "status_documento": "NORMAL ou CANCELADO",
-  "romaneio_numero": "número do romaneio (pode ser o número em vermelho, ou o número impresso no topo após 'Nº' ex: Nº 482)",
-  "data": "data formatada OBRIGATORIAMENTE no padrão DD/MM/YY (ex: 16/07/26)",
+  "romaneio_numero": "número do romaneio (número impresso ao lado de 'Nº', ex: Nº 482 → '482')",
+  "data": "data formatada OBRIGATORIAMENTE no padrão DD/MM/YY (ex: 17/07/26)",
   "pagamento": "forma de pagamento se estiver escrita (ex: Dinheiro, Pix, Cheque, Prazo). Se não houver, deixe vazio",
   "itens": [
     {
-      "raciocinio": "String onde você pensa em voz alta. Ex: 'Vejo na linha 1 a quant 1200. Valor unit é 25. Total é 30000. 1200 * 25 = 30000. A conta bate. A mercadoria lida letra por letra é BATATA ESPECIAL LAVADA. Não tem peso no fim.'",
-      "quantidade": 1200,
-      "mercadoria": "BATATA ESPECIAL LAVADA",
-      "valor_unitario": 25.0,
-      "valor_total": 30000.0
+      "raciocinio": "Analiso o primeiro dígito da quantidade: vejo um gancho curvo — na caligrafia brasileira isso é '1'. O número completo com ponto de milhar é 1.100. Valor unit = 20,00. Total esperado = 22.000. Confiro com o total escrito: 22.000. Bate! Mercadoria: leio letra por letra = B-A-T-A-T-A A-G-A-T-A L-A-V-A-D-A.",
+      "quantidade": 1100,
+      "mercadoria": "Batata Ágata Lavada",
+      "valor_unitario": 20.0,
+      "valor_total": 22000.0
     }
   ]
 }`;
